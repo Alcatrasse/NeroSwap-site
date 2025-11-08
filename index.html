@@ -1,38 +1,90 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NeroSwap</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>NeroSwap — Professional DeFi UI</title>
+  <meta name="description" content="NeroSwap — decentralized swapping, liquidity & lending." />
   <link rel="stylesheet" href="style.css" />
+  <!-- Ethers + Wallet providers + Web3Modal (CDN) -->
+  <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.min.js"></script>
+  <script src="https://unpkg.com/@walletconnect/web3-provider@1.7.8/dist/umd/index.min.js"></script>
+  <script src="https://unpkg.com/coinbase-wallet-sdk@3.0.9/dist/coinbase-wallet-sdk.min.js"></script>
+  <script src="https://unpkg.com/web3modal@1.9.12/dist/index.js"></script>
 </head>
 <body>
-  <div class="background">
-    <canvas id="smoke"></canvas>
-    <div class="diamonds"></div>
+  <!-- Subtle background + diamonds + smoke canvas -->
+  <div class="bg-layer">
+    <canvas id="smokeCanvas" aria-hidden="true"></canvas>
+    <div id="diamonds" aria-hidden="true"></div>
   </div>
 
-  <header class="navbar">
-    <div class="logo">NeroSwap</div>
-    <nav class="menu">
-      <a href="#">Swap</a>
-      <a href="#">Liquidity</a>
-      <a href="#">Docs</a>
-      <a href="#">Learn</a>
-      <a href="#">More</a>
+  <!-- Top navigation -->
+  <header class="topbar">
+    <div class="left">
+      <div class="brand">
+        <div class="logo"><span>NeroSwap</span></div>
+        <div class="tag">DeFi • Swap • Liquidity</div>
+      </div>
+    </div>
+
+    <nav class="center">
+      <a href="#swap">Swap</a>
+      <a href="#liquidity">Liquidity</a>
+      <a href="#docs">Docs</a>
+      <a href="#learn">Learn</a>
+      <a href="#more">More</a>
     </nav>
-    <button id="connectWallet" class="wallet-btn">Connect Wallet</button>
+
+    <div class="right">
+      <div id="walletPanel" class="wallet-panel hidden" aria-hidden="true">
+        <div><small>Account</small><div id="addr">—</div></div>
+        <div><small>Balance</small><div id="bal">—</div></div>
+        <div><small>Network</small><div id="net">—</div></div>
+      </div>
+      <button id="connectBtn" class="btn-connect">Connect Wallet</button>
+    </div>
   </header>
 
-  <main class="content">
-    <h1>Welcome to NeroSwap</h1>
-    <p>The decentralized platform for swapping, lending, and liquidity.</p>
-    <div id="walletStatus" class="wallet-status hidden">
-      <p><strong>Connected Wallet:</strong> <span id="walletAddress"></span></p>
-      <p><strong>Balance:</strong> <span id="walletBalance"></span> ETH</p>
-    </div>
+  <!-- Main hero -->
+  <main class="hero">
+    <section class="card">
+      <div class="card-left">
+        <div class="accent"></div>
+        <h1>NeroSwap</h1>
+        <p class="lead">A refined decentralized platform for token swaps, liquidity provisioning and lending.</p>
+
+        <div class="controls">
+          <button class="btn ghost">Explore</button>
+          <button class="btn outline">Whitepaper</button>
+        </div>
+      </div>
+
+      <aside class="card-right">
+        <div class="panel">
+          <h3>Quick Start</h3>
+          <p class="small">Connect a Web3 wallet to interact with the demo interface. This UI is production-ready for integrating smart contracts.</p>
+          <div class="footer-meta">
+            <small>© <span id="year"></span> NeroSwap</small>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <!-- Community row -->
+    <section class="community">
+      <div class="community-inner">
+        <span>Join our community</span>
+        <div class="icons">
+          <a href="#" title="Telegram" aria-label="Telegram">TG</a>
+          <a href="#" title="X (Twitter)" aria-label="X">X</a>
+          <a href="#" title="Discord" aria-label="Discord">DC</a>
+        </div>
+      </div>
+    </section>
   </main>
 
   <script src="script.js"></script>
 </body>
 </html>
+
