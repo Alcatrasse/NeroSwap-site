@@ -11,58 +11,188 @@
   <style>
     :root{
       --bg:#050406;
-      --glass: rgba(255,255,255,0.04);
-      --accent1: #ff2d71;
-      --accent2: #8a2be2;
+      --glass: rgba(255,255,255,0.03);
+      --accent1: #ff2d71; /* pinkish red */
+      --accent2: #8a2be2; /* purple */
       --text: #e8e6ea;
+      --muted: rgba(232,230,234,0.6);
     }
     *{box-sizing:border-box}
-    html,body{height:100%;margin:0;font-family:'Inter',system-ui,Arial;background:var(--bg);color:var(--text)}
+    html,body{height:100%;margin:0;font-family:Inter,system-ui,Arial;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased}
 
+    /* Top navigation (logo left, links center, connect right) */
+    .topbar{position:fixed;inset:18px 24px auto 24px;z-index:40;display:flex;align-items:center;justify-content:space-between;gap:18px}
+    .brand{display:flex;align-items:center;gap:12px}
+    .logo{font-weight:800;font-size:20px;letter-spacing:0.6px}
+    /* animated gradient for logo */
+    .logo span{background:linear-gradient(90deg,var(--accent1),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent;display:inline-block;animation:logoShift 4s linear infinite}
+    @keyframes logoShift{0%{filter:hue-rotate(0deg)}50%{filter:hue-rotate(20deg)}100%{filter:hue-rotate(0deg)}}
+
+    .navlinks{display:flex;gap:18px;align-items:center}
+    .navlinks a{color:var(--muted);text-decoration:none;font-weight:600;padding:8px 12px;border-radius:8px;transition:all 220ms ease}
+    .navlinks a:hover{color:white;text-shadow:0 6px 28px rgba(138,43,226,0.12);transform:translateY(-3px)}
+
+    .connect-wrap{display:flex;align-items:center;gap:12px}
+    .connect-btn{background:linear-gradient(90deg,var(--accent1),var(--accent2));padding:10px 16px;border-radius:12px;border:none;color:white;font-weight:700;cursor:pointer;box-shadow:0 10px 30px rgba(138,43,226,0.12);transition:transform .18s ease, box-shadow .18s ease}
+    .connect-btn:hover{transform:translateY(-3px);box-shadow:0 18px 50px rgba(138,43,226,0.18)}
+
+    /* wallet panel (hidden until connected) */
+    .wallet-panel{min-width:260px;background:rgba(255,255,255,0.02);border-radius:12px;padding:12px;border:1px solid rgba(255,255,255,0.04);backdrop-filter:blur(6px);display:none;flex-direction:column;gap:8px}
+    .wallet-row{display:flex;justify-content:space-between;align-items:center;padding:8px;border-radius:8px}
+    .wallet-row small{color:var(--muted)}
+
+    /* main hero */
+    .wrap{position:relative;z-index:10;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:120px 24px 48px}
+    .card{width:100%;max-width:1200px;border-radius:20px;padding:48px;border:1px solid rgba(255,255,255,0.03);display:grid;grid-template-columns:1fr 420px;gap:28px;align-items:center;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005));box-shadow:0 18px 60px rgba(0,0,0,0.65)}
+
+    h1{font-size:48px;margin:0 0 8px 0;letter-spacing:1px}
+    .lead{margin:0 0 22px 0;color:var(--muted);line-height:1.5}
+
+    .hero-actions{display:flex;gap:12px;align-items:center}
+    .ghost-btn{background:transparent;border:1px solid rgba(255,255,255,0.04);padding:12px 16px;border-radius:12px;color:var(--text);cursor:pointer}
+
+    /* crystals (diamonds) in background */
     .bg-smoke{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;background: linear-gradient(120deg, rgba(138,43,226,0.06), rgba(255,45,113,0.08));}
-    .bg-smoke::after{content:'';position:absolute;right:-20%;top:-10%;width:160%;height:120%;background: radial-gradient(closest-side at 80% 20%, rgba(138,43,226,0.25), transparent 20%), radial-gradient(closest-side at 85% 50%, rgba(255,45,113,0.18), transparent 25%);transform: rotate(-12deg);filter:blur(40px) saturate(130%);opacity:0.95;animation: drift 14s linear infinite;}
-    @keyframes drift{0%{transform:translateX(0) rotate(-12deg)}50%{transform:translateX(-6%) rotate(-11deg)}100%{transform:translateX(0) rotate(-12deg)}}
+    .diamond{position:absolute;z-index:2;filter:drop-shadow(0 20px 60px rgba(138,43,226,0.08));opacity:0.95;transform-origin:center}
+    .diamond svg{display:block;width:84px;height:84px}
 
-    .wrap{position:relative;z-index:10;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:48px}
-    .card{width:100%;max-width:1100px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:20px;padding:48px;border:1px solid rgba(255,255,255,0.04);backdrop-filter: blur(6px);box-shadow:0 8px 40px rgba(0,0,0,0.6);display:grid;grid-template-columns:1fr 420px;gap:28px;align-items:center}
+    /* positions and animations */
+    .d1{right:6%;top:8%;animation:floatA 9s ease-in-out infinite}
+    .d2{right:22%;top:40%;animation:floatB 11s ease-in-out infinite}
+    .d3{right:38%;top:68%;animation:floatC 13s ease-in-out infinite}
+    .d4{left:6%;bottom:10%;animation:floatD 10s ease-in-out infinite}
+    .d5{left:28%;top:14%;animation:floatE 12s ease-in-out infinite}
 
-    h1{font-size:44px;margin:0 0 12px 0;letter-spacing:1px}
-    p.lead{margin:0 0 22px 0;color:rgba(232,230,234,0.8);line-height:1.5}
+    @keyframes floatA{0%{transform:translateY(0) rotate(0) scale(.9)}50%{transform:translateY(-20px) rotate(10deg) scale(1.05)}100%{transform:translateY(0) rotate(0) scale(.9)}}
+    @keyframes floatB{0%{transform:translateY(0) rotate(-6deg) scale(.85)}50%{transform:translateY(-26px) rotate(6deg) scale(1.08)}100%{transform:translateY(0) rotate(-6deg) scale(.85)}}
+    @keyframes floatC{0%{transform:translateY(0) rotate(4deg) scale(.9)}50%{transform:translateY(-18px) rotate(-6deg) scale(1.03)}100%{transform:translateY(0) rotate(4deg) scale(.9)}}
+    @keyframes floatD{0%{transform:translateY(0) rotate(0) scale(.8)}50%{transform:translateY(-16px) rotate(6deg) scale(1)}100%{transform:translateY(0) rotate(0) scale(.8)}}
+    @keyframes floatE{0%{transform:translateY(0) rotate(2deg) scale(.87)}50%{transform:translateY(-22px) rotate(-8deg) scale(1.04)}100%{transform:translateY(0) rotate(2deg) scale(.87)}}
 
-    .actions{display:flex;gap:12px;flex-wrap:wrap}
-    .btn{cursor:pointer;padding:12px 18px;border-radius:12px;border:1px solid rgba(255,255,255,0.06);background:linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));color:var(--text);font-weight:600}
-    .btn.primary{background:linear-gradient(90deg,var(--accent1),var(--accent2));box-shadow:0 6px 20px rgba(138,43,226,0.12);color:white}
+    /* diamond appearance: multi-faceted gradient */
+    .facet{mix-blend-mode:screen}
 
-    .panel{padding:18px;border-radius:14px;background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);border:1px solid rgba(255,255,255,0.03)}
-    .wallet-info{display:flex;flex-direction:column;gap:10px}
-    .wallet-item{padding:12px;border-radius:10px;background:rgba(255,255,255,0.02);display:flex;justify-content:space-between;align-items:center}
+    .accent-line{height:6px;width:200px;border-radius:10px;background:linear-gradient(90deg,var(--accent2),var(--accent1));margin-bottom:18px}
 
-    .crystal{position:absolute;z-index:5;will-change:transform,opacity;filter:drop-shadow(0 6px 30px rgba(138,43,226,0.08));opacity:0.9}
-    .crystal svg{display:block;width:64px;height:64px}
-    .c1{right:6%;top:12%;animation:float1 8s ease-in-out infinite}
-    .c2{right:20%;top:42%;animation:float2 10s ease-in-out infinite}
-    .c3{right:38%;top:68%;animation:float3 12s ease-in-out infinite}
-    .c4{left:8%;bottom:10%;animation:float4 9s ease-in-out infinite}
+    footer{margin-top:28px;color:var(--muted);font-size:13px}
 
-    @keyframes float1{0%{transform:translateY(0) rotate(0) scale(0.9)}50%{transform:translateY(-18px) rotate(8deg) scale(1)}100%{transform:translateY(0) rotate(0) scale(0.9)}}
-    @keyframes float2{0%{transform:translateY(0) rotate(-6deg) scale(0.85)}50%{transform:translateY(-26px) rotate(6deg) scale(1.05)}100%{transform:translateY(0) rotate(-6deg) scale(0.85)}}
-    @keyframes float3{0%{transform:translateY(0) rotate(4deg) scale(0.9)}50%{transform:translateY(-20px) rotate(-6deg) scale(1.02)}100%{transform:translateY(0) rotate(4deg) scale(0.9)}}
-    @keyframes float4{0%{transform:translateY(0) rotate(0) scale(0.8)}50%{transform:translateY(-16px) rotate(6deg) scale(1)}100%{transform:translateY(0) rotate(0) scale(0.8)}}
+    /* glow hover for interactive items */
+    .glow-hover:hover{box-shadow:0 12px 40px rgba(138,43,226,0.14);transform:translateY(-4px)}
+    .text-glow:hover{text-shadow:0 10px 40px rgba(138,43,226,0.12)}
 
-    .accent-line{height:6px;width:160px;border-radius:10px;background:linear-gradient(90deg,var(--accent2),var(--accent1));margin-bottom:18px}
-
-    footer{margin-top:28px;color:rgba(232,230,234,0.6);font-size:13px}
-
-    @media (max-width:900px){.card{grid-template-columns:1fr;}.panel{order:-1}}
+    /* responsive */
+    @media (max-width:980px){
+      .card{grid-template-columns:1fr;}
+      .topbar{left:12px;right:12px}
+      .diamond svg{width:64px;height:64px}
+      .navlinks{display:none}
+    }
+    @media (max-width:520px){
+      h1{font-size:32px}
+      .logo{font-size:18px}
+      .connect-btn{padding:8px 10px}
+      .card{padding:28px}
+    }
   </style>
 </head>
 <body>
-  <div class="bg-smoke" aria-hidden></div>
+  <!-- background smoke -->
+  <div class="bg-smoke" aria-hidden>
+    <!-- diamonds -->
+    <div class="diamond d1" aria-hidden>
+      <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="dg1" x1="0" x2="1">
+            <stop offset="0%" stop-color="#ff3a7a"/>
+            <stop offset="60%" stop-color="#c04bff"/>
+            <stop offset="100%" stop-color="#8a2be2"/>
+          </linearGradient>
+        </defs>
+        <g transform="translate(32,32)">
+          <polygon class="facet" points="0,-28 12,-6 0,18 -12,-6" fill="url(#dg1)"/>
+          <polygon class="facet" points="0,-28 12,-6 0,2" fill-opacity="0.12" fill="#ffffff"/>
+          <polygon class="facet" points="0,18 12,-6 0,2" fill-opacity="0.06" fill="#000000"/>
+        </g>
+      </svg>
+    </div>
+    <div class="diamond d2" aria-hidden>
+      <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="dg2" x1="0" x2="1">
+            <stop offset="0%" stop-color="#ff5a8a"/>
+            <stop offset="100%" stop-color="#c77bff"/>
+          </linearGradient>
+        </defs>
+        <g transform="translate(32,32)">
+          <polygon class="facet" points="0,-24 10,-2 0,16 -10,-2" fill="url(#dg2)"/>
+        </g>
+      </svg>
+    </div>
+    <div class="diamond d3" aria-hidden>
+      <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="dg3" x1="0" x2="1">
+            <stop offset="0%" stop-color="#ff2d71"/>
+            <stop offset="100%" stop-color="#7a1cf0"/>
+          </linearGradient>
+        </defs>
+        <g transform="translate(32,32)">
+          <polygon class="facet" points="0,-26 11,-4 0,18 -11,-4" fill="url(#dg3)"/>
+        </g>
+      </svg>
+    </div>
+    <div class="diamond d4" aria-hidden>
+      <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="dg4" x1="0" x2="1">
+            <stop offset="0%" stop-color="#ff7a9c"/>
+            <stop offset="100%" stop-color="#b48bff"/>
+          </linearGradient>
+        </defs>
+        <g transform="translate(32,32)">
+          <polygon class="facet" points="0,-20 8,0 0,14 -8,0" fill="url(#dg4)"/>
+        </g>
+      </svg>
+    </div>
+    <div class="diamond d5" aria-hidden>
+      <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="dg5" x1="0" x2="1">
+            <stop offset="0%" stop-color="#ff2d71"/>
+            <stop offset="100%" stop-color="#8a2be2"/>
+          </linearGradient>
+        </defs>
+        <g transform="translate(32,32)">
+          <polygon class="facet" points="0,-18 7,-2 0,12 -7,-2" fill="url(#dg5)"/>
+        </g>
+      </svg>
+    </div>
+  </div>
 
-  <div class="crystal c1"> <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="g1" x1="0" x2="1"><stop offset="0%" stop-color="#ff2d71"/><stop offset="100%" stop-color="#8a2be2"/></linearGradient></defs><g transform="translate(32,32)"><path d="M0 -22 L14 -2 L0 20 L-14 -2 Z" fill="url(#g1)" opacity="0.95"/><path d="M0 -22 L0 20" stroke="rgba(255,255,255,0.08)" stroke-width="1"/></g></svg></div>
-  <div class="crystal c2"> <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="g2" x1="0" x2="1"><stop offset="0%" stop-color="#ff5a8a"/><stop offset="100%" stop-color="#c77bff"/></linearGradient></defs><g transform="translate(32,32)"><path d="M0 -20 L10 0 L0 20 L-10 0 Z" fill="url(#g2)" opacity="0.95"/></g></svg></div>
-  <div class="crystal c3"> <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="g3" x1="0" x2="1"><stop offset="0%" stop-color="#ff2d71"/><stop offset="100%" stop-color="#7a1cf0"/></linearGradient></defs><g transform="translate(32,32)"><path d="M0 -22 L12 -2 L0 20 L-12 -2 Z" fill="url(#g3)" opacity="0.96"/></g></svg></div>
-  <div class="crystal c4"> <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="g4" x1="0" x2="1"><stop offset="0%" stop-color="#ff7a9c"/><stop offset="100%" stop-color="#b48bff"/></linearGradient></defs><g transform="translate(32,32)"><path d="M0 -16 L8 0 L0 16 L-8 0 Z" fill="url(#g4)" opacity="0.95"/></g></svg></div>
+  <!-- top bar -->
+  <div class="topbar">
+    <div class="brand">
+      <div class="logo"><span>NeroSwap</span></div>
+    </div>
+
+    <nav class="navlinks" aria-label="Main navigation">
+      <a href="#swap" class="text-glow">Swap</a>
+      <a href="#liquidity" class="text-glow">Liquidity</a>
+      <a href="#docs" class="text-glow">Docs</a>
+      <a href="#learn" class="text-glow">Learn</a>
+      <a href="#more" class="text-glow">More</a>
+    </nav>
+
+    <div class="connect-wrap">
+      <div id="walletPanel" class="wallet-panel" role="status" aria-hidden="true">
+        <div class="wallet-row"><small>Wallet:</small><div id="walletAddress">—</div></div>
+        <div class="wallet-row"><small>Balance (ETH):</small><div id="walletBalance">—</div></div>
+        <div class="wallet-row"><small>Network:</small><div id="network">—</div></div>
+      </div>
+
+      <button id="connectBtn" class="connect-btn glow-hover">Connect Wallet</button>
+    </div>
+  </div>
 
   <main class="wrap">
     <section class="card" role="main">
@@ -71,34 +201,24 @@
         <h1>NeroSwap</h1>
         <p class="lead">A DeFi platform for token swapping, liquidity providing, and lending — secure and easy Web3 experience.</p>
 
-        <div class="actions">
-          <button id="connectBtn" class="btn primary">Connect Wallet</button>
-          <button id="learnBtn" class="btn">Learn More</button>
-          <button id="docsBtn" class="btn">Docs</button>
+        <div class="hero-actions">
+          <button class="ghost-btn">Explore</button>
+          <button class="ghost-btn">Whitepaper</button>
         </div>
 
         <footer>© <span id="year"></span> NeroSwap — Demo Frontend</footer>
       </div>
 
-      <aside class="panel">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-          <strong>Wallet Status</strong>
-          <small id="network" style="color:rgba(232,230,234,0.6)">Not connected</small>
-        </div>
-
-        <div class="wallet-info">
-          <div class="wallet-item"><div>Connected Address:</div><div id="walletAddress">—</div></div>
-          <div class="wallet-item"><div>Balance (ETH):</div><div id="walletBalance">—</div></div>
-          <div class="wallet-item"><div>Wallet Type:</div><div id="walletName">—</div></div>
-        </div>
-
-        <div style="margin-top:14px">
-          <small style="color:rgba(232,230,234,0.6)">Note: This is a demo landing page. For real smart contract interactions, backend and contract ABI are required.</small>
+      <aside class="panel" style="padding:18px;border-radius:14px;background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);border:1px solid rgba(255,255,255,0.03)">
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div style="color:var(--muted);font-size:14px">Connect your wallet to view account details and interact with contracts.</div>
+          <div style="margin-top:6px;color:var(--muted);font-size:13px">This panel appears when the wallet is connected.</div>
         </div>
       </aside>
     </section>
   </main>
 
+  <!-- external libs -->
   <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.min.js"></script>
   <script src="https://unpkg.com/@walletconnect/web3-provider@1.7.8/dist/umd/index.min.js"></script>
   <script src="https://unpkg.com/coinbase-wallet-sdk@3.0.9/dist/coinbase-wallet-sdk.min.js"></script>
@@ -107,6 +227,7 @@
   <script>
     document.getElementById('year').textContent = new Date().getFullYear();
 
+    // Web3Modal provider options for EVM wallets
     const providerOptions = {
       walletconnect: {
         package: window.WalletConnectProvider.default,
@@ -114,9 +235,7 @@
       },
       coinbase: {
         package: window.CoinbaseWalletSDK,
-        options: {
-          appName: "NeroSwap Demo",
-        }
+        options: { appName: 'NeroSwap Demo' }
       }
     };
 
@@ -124,36 +243,59 @@
 
     let provider = null;
     let signer = null;
+    let modalProvider = null;
 
     async function connectWallet(){
       try{
-        const instance = await web3Modal.connect();
-        provider = new ethers.providers.Web3Provider(instance);
+        modalProvider = await web3Modal.connect();
+        provider = new ethers.providers.Web3Provider(modalProvider);
         signer = provider.getSigner();
 
         const address = await signer.getAddress();
         const balance = await provider.getBalance(address);
         const network = await provider.getNetwork();
 
+        // show wallet panel
         document.getElementById('walletAddress').textContent = address.slice(0,6) + '...' + address.slice(-4);
-        document.getElementById('walletBalance').textContent = ethers.utils.formatEther(balance);
+        document.getElementById('walletBalance').textContent = parseFloat(ethers.utils.formatEther(balance)).toFixed(4);
         document.getElementById('network').textContent = network.name || network.chainId;
-        document.getElementById('walletName').textContent = instance.isMetaMask? 'MetaMask' : (instance.isCoinbaseWallet? 'Coinbase Wallet' : 'Other Wallet');
 
-        if(instance.on){
-          instance.on('accountsChanged', (accounts)=>{document.getElementById('walletAddress').textContent = accounts[0]?.slice(0,6) + '...' + accounts[0]?.slice(-4) || '—'});
-          instance.on('chainChanged', ()=>window.location.reload());
+        const wp = document.getElementById('walletPanel');
+        wp.style.display = 'flex';
+        wp.setAttribute('aria-hidden','false');
+
+        // listen for account changes
+        if(modalProvider.on){
+          modalProvider.on('accountsChanged', (accounts)=>{
+            if(accounts.length === 0){
+              disconnectWallet();
+            } else {
+              document.getElementById('walletAddress').textContent = accounts[0].slice(0,6) + '...' + accounts[0].slice(-4);
+            }
+          });
+          modalProvider.on('chainChanged', ()=>{window.location.reload();});
+          modalProvider.on('disconnect', ()=>{disconnectWallet();});
         }
 
       }catch(err){
-        console.log('connect error',err);
-        alert('Failed to connect wallet. Make sure a Web3 wallet is installed.');
+        console.error('Wallet connect error', err);
+        alert('Failed to connect wallet. Make sure a Web3 wallet is available.');
       }
     }
 
-    document.getElementById('connectBtn').addEventListener('click', ()=>{connectWallet();});
-    document.getElementById('learnBtn').addEventListener('click', ()=>{window.scrollTo({top:0,behavior:'smooth'})});
-    document.getElementById('docsBtn').addEventListener('click', ()=>{window.open('#','_blank')});
+    function disconnectWallet(){
+      try{
+        if(modalProvider && modalProvider.disconnect){ modalProvider.disconnect(); }
+      }catch(e){/*ignore*/}
+      provider = null; signer = null; modalProvider = null;
+      document.getElementById('walletPanel').style.display = 'none';
+      document.getElementById('walletPanel').setAttribute('aria-hidden','true');
+      document.getElementById('walletAddress').textContent = '—';
+      document.getElementById('walletBalance').textContent = '—';
+      document.getElementById('network').textContent = '—';
+    }
+
+    document.getElementById('connectBtn').addEventListener('click', ()=>{ connectWallet(); });
   </script>
 </body>
 </html>
