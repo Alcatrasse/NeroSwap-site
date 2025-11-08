@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>NeroSwap — DeFi Swap & Liquidity</title>
+  <meta name="description" content="NeroSwap - DeFi platform for swapping, liquidity providing and lending." />
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg:#050406;
+      --glass: rgba(255,255,255,0.04);
+      --accent1: #ff2d71;
+      --accent2: #8a2be2;
+      --text: #e8e6ea;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;font-family:'Inter',system-ui,Arial;background:var(--bg);color:var(--text)}
+
+    .bg-smoke{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;background: linear-gradient(120deg, rgba(138,43,226,0.06), rgba(255,45,113,0.08));}
+    .bg-smoke::after{content:'';position:absolute;right:-20%;top:-10%;width:160%;height:120%;background: radial-gradient(closest-side at 80% 20%, rgba(138,43,226,0.25), transparent 20%), radial-gradient(closest-side at 85% 50%, rgba(255,45,113,0.18), transparent 25%);transform: rotate(-12deg);filter:blur(40px) saturate(130%);opacity:0.95;animation: drift 14s linear infinite;}
+    @keyframes drift{0%{transform:translateX(0) rotate(-12deg)}50%{transform:translateX(-6%) rotate(-11deg)}100%{transform:translateX(0) rotate(-12deg)}}
+
+    .wrap{position:relative;z-index:10;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:48px}
+    .card{width:100%;max-width:1100px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:20px;padding:48px;border:1px solid rgba(255,255,255,0.04);backdrop-filter: blur(6px);box-shadow:0 8px 40px rgba(0,0,0,0.6);display:grid;grid-template-columns:1fr 420px;gap:28px;align-items:center}
+
+    h1{font-size:44px;margin:0 0 12px 0;letter-spacing:1px}
+    p.lead{margin:0 0 22px 0;color:rgba(232,230,234,0.8);line-height:1.5}
+
+    .actions{display:flex;gap:12px;flex-wrap:wrap}
+    .btn{cursor:pointer;padding:12px 18px;border-radius:12px;border:1px solid rgba(255,255,255,0.06);background:linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));color:var(--text);font-weight:600}
+    .btn.primary{background:linear-gradient(90deg,var(--accent1),var(--accent2));box-shadow:0 6px 20px rgba(138,43,226,0.12);color:white}
+
+    .panel{padding:18px;border-radius:14px;background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);border:1px solid rgba(255,255,255,0.03)}
+    .wallet-info{display:flex;flex-direction:column;gap:10px}
+    .wallet-item{padding:12px;border-radius:10px;background:rgba(255,255,255,0.02);display:flex;justify-content:space-between;align-items:center}
+
+    .crystal{position:absolute;z-index:5;will-change:transform,opacity;filter:drop-shadow(0 6px 30px rgba(138,43,226,0.08));opacity:0.9}
+    .crystal svg{display:block;width:64px;height:64px}
+    .c1{right:6%;top:12%;animation:float1 8s ease-in-out infinite}
+    .c2{right:20%;top:42%;animation:float2 10s ease-in-out infinite}
+    .c3{right:38%;top:68%;animation:float3 12s ease-in-out infinite}
+    .c4{left:8%;bottom:10%;animation:float4 9s ease-in-out infinite}
+
+    @keyframes float1{0%{transform:translateY(0) rotate(0) scale(0.9)}50%{transform:translateY(-18px) rotate(8deg) scale(1)}100%{transform:translateY(0) rotate(0) scale(0.9)}}
+    @keyframes float2{0%{transform:translateY(0) rotate(-6deg) scale(0.85)}50%{transform:translateY(-26px) rotate(6deg) scale(1.05)}100%{transform:translateY(0) rotate(-6deg) scale(0.85)}}
+    @keyframes float3{0%{transform:translateY(0) rotate(4deg) scale(0.9)}50%{transform:translateY(-20px) rotate(-6deg) scale(1.02)}100%{transform:translateY(0) rotate(4deg) scale(0.9)}}
+    @keyframes float4{0%{transform:translateY(0) rotate(0) scale(0.8)}50%{transform:translateY(-16px) rotate(6deg) scale(1)}100%{transform:translateY(0) rotate(0) scale(0.8)}}
+
+    .accent-line{height:6px;width:160px;border-radius:10px;background:linear-gradient(90deg,var(--accent2),var(--accent1));margin-bottom:18px}
+
+    footer{margin-top:28px;color:rgba(232,230,234,0.6);font-size:13px}
+
+    @media (max-width:900px){.card{grid-template-columns:1fr;}.panel{order:-1}}
+  </style>
+</head>
+<body>
+  <div class="bg-smoke" aria-hidden></div>
+
+  <div class="crystal c1"> <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="g1" x1="0" x2="1"><stop offset="0%" stop-color="#ff2d71"/><stop offset="100%" stop-color="#8a2be2"/></linearGradient></defs><g transform="translate(32,32)"><path d="M0 -22 L14 -2 L0 20 L-14 -2 Z" fill="url(#g1)" opacity="0.95"/><path d="M0 -22 L0 20" stroke="rgba(255,255,255,0.08)" stroke-width="1"/></g></svg></div>
+  <div class="crystal c2"> <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="g2" x1="0" x2="1"><stop offset="0%" stop-color="#ff5a8a"/><stop offset="100%" stop-color="#c77bff"/></linearGradient></defs><g transform="translate(32,32)"><path d="M0 -20 L10 0 L0 20 L-10 0 Z" fill="url(#g2)" opacity="0.95"/></g></svg></div>
+  <div class="crystal c3"> <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="g3" x1="0" x2="1"><stop offset="0%" stop-color="#ff2d71"/><stop offset="100%" stop-color="#7a1cf0"/></linearGradient></defs><g transform="translate(32,32)"><path d="M0 -22 L12 -2 L0 20 L-12 -2 Z" fill="url(#g3)" opacity="0.96"/></g></svg></div>
+  <div class="crystal c4"> <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="g4" x1="0" x2="1"><stop offset="0%" stop-color="#ff7a9c"/><stop offset="100%" stop-color="#b48bff"/></linearGradient></defs><g transform="translate(32,32)"><path d="M0 -16 L8 0 L0 16 L-8 0 Z" fill="url(#g4)" opacity="0.95"/></g></svg></div>
+
+  <main class="wrap">
+    <section class="card" role="main">
+      <div>
+        <div class="accent-line" aria-hidden></div>
+        <h1>NeroSwap</h1>
+        <p class="lead">A DeFi platform for token swapping, liquidity providing, and lending — secure and easy Web3 experience.</p>
+
+        <div class="actions">
+          <button id="connectBtn" class="btn primary">Connect Wallet</button>
+          <button id="learnBtn" class="btn">Learn More</button>
+          <button id="docsBtn" class="btn">Docs</button>
+        </div>
+
+        <footer>© <span id="year"></span> NeroSwap — Demo Frontend</footer>
+      </div>
+
+      <aside class="panel">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+          <strong>Wallet Status</strong>
+          <small id="network" style="color:rgba(232,230,234,0.6)">Not connected</small>
+        </div>
+
+        <div class="wallet-info">
+          <div class="wallet-item"><div>Connected Address:</div><div id="walletAddress">—</div></div>
+          <div class="wallet-item"><div>Balance (ETH):</div><div id="walletBalance">—</div></div>
+          <div class="wallet-item"><div>Wallet Type:</div><div id="walletName">—</div></div>
+        </div>
+
+        <div style="margin-top:14px">
+          <small style="color:rgba(232,230,234,0.6)">Note: This is a demo landing page. For real smart contract interactions, backend and contract ABI are required.</small>
+        </div>
+      </aside>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.min.js"></script>
+  <script src="https://unpkg.com/@walletconnect/web3-provider@1.7.8/dist/umd/index.min.js"></script>
+  <script src="https://unpkg.com/coinbase-wallet-sdk@3.0.9/dist/coinbase-wallet-sdk.min.js"></script>
+  <script src="https://unpkg.com/web3modal@1.9.12/dist/index.js"></script>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    const providerOptions = {
+      walletconnect: {
+        package: window.WalletConnectProvider.default,
+        options: { infuraId: "" }
+      },
+      coinbase: {
+        package: window.CoinbaseWalletSDK,
+        options: {
+          appName: "NeroSwap Demo",
+        }
+      }
+    };
+
+    const web3Modal = new window.Web3Modal.default({ cacheProvider: false, providerOptions });
+
+    let provider = null;
+    let signer = null;
+
+    async function connectWallet(){
+      try{
+        const instance = await web3Modal.connect();
+        provider = new ethers.providers.Web3Provider(instance);
+        signer = provider.getSigner();
+
+        const address = await signer.getAddress();
+        const balance = await provider.getBalance(address);
+        const network = await provider.getNetwork();
+
+        document.getElementById('walletAddress').textContent = address.slice(0,6) + '...' + address.slice(-4);
+        document.getElementById('walletBalance').textContent = ethers.utils.formatEther(balance);
+        document.getElementById('network').textContent = network.name || network.chainId;
+        document.getElementById('walletName').textContent = instance.isMetaMask? 'MetaMask' : (instance.isCoinbaseWallet? 'Coinbase Wallet' : 'Other Wallet');
+
+        if(instance.on){
+          instance.on('accountsChanged', (accounts)=>{document.getElementById('walletAddress').textContent = accounts[0]?.slice(0,6) + '...' + accounts[0]?.slice(-4) || '—'});
+          instance.on('chainChanged', ()=>window.location.reload());
+        }
+
+      }catch(err){
+        console.log('connect error',err);
+        alert('Failed to connect wallet. Make sure a Web3 wallet is installed.');
+      }
+    }
+
+    document.getElementById('connectBtn').addEventListener('click', ()=>{connectWallet();});
+    document.getElementById('learnBtn').addEventListener('click', ()=>{window.scrollTo({top:0,behavior:'smooth'})});
+    document.getElementById('docsBtn').addEventListener('click', ()=>{window.open('#','_blank')});
+  </script>
+</body>
+</html>
